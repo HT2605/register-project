@@ -1,0 +1,18 @@
+<div class="ml-5">
+    <ag-grid-angular
+        style="width: 500px; height: 500px"
+        class="ag-theme-balham"
+        [rowData] = rowData
+        [columnDefs] = colDefs
+        rowSelection = 'single'
+        (selectionChanged)="onSelectionChanged($event)"
+        (rowDoubleClicked)="doubleClick()"
+    ></ag-grid-angular>
+    <div>
+        <button class="btn btn-success mr-2" (click)="add()">Thêm</button>
+        <button class="btn btn-success mr-2" (click)="update()">Sửa</button>
+        <button class="btn btn-success mr-2" (click)="del()">Xóa</button>
+    </div>
+</div>
+<app-ag-modal #agModal></app-ag-modal>
+<app-ag-confirm #agConfirm></app-ag-confirm>
