@@ -45,8 +45,8 @@
                 </form>
             </div>
             <div class="modal-footer">
-                <button class="btn btn-secondary">Xác nhận</button>
-                <button class="btn btn-secondary">Hủy</button>
+                <button [disabled]="lockbtn" class="btn btn-secondary" (click)="add()" >Xác nhận</button>
+                <button [disabled]="lockbtn" class="btn btn-secondary">Hủy</button>
             </div>
         </div>
     </div>

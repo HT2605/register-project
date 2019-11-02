@@ -15,6 +15,7 @@ export class AggridComponent implements OnInit {
   modify: boolean = true
   modalRef: BsModalRef;
   message: string;
+  childIndex
 
   colDefs = [
     { headerName: 'Tên', field: 'name' },
@@ -30,9 +31,7 @@ export class AggridComponent implements OnInit {
     { name: 'Nguyen Van E', age: '10', location: 'HCM' },
   ]
 
-  constructor(
-    private modalService: BsModalService,
-  ) { }
+  constructor() { }
 
   ngOnInit() {
   }
@@ -44,9 +43,10 @@ export class AggridComponent implements OnInit {
 
 
 getSelectedRow() {
-  const selectData = this.gridParams.api.getSelectedRows();
+  const selectData = this.gridParams.api.getSelectedNodes()[0].data;
   if (selectData) {
-    this.selectedRowData = selectData[0]
+    this.selectedRowData = selectData
+    this.childIndex = this.gridParams.api.getSelectedNodes()[0].childIndex
   }
 }
 
@@ -55,14 +55,12 @@ getSelectedRow() {
   }
 
   add() {
-    if (this.selectedRowData) {
-      this.agModal.open(this.selectedRowData, this.modify);
-    } 
+      this.agModal.open();
   }
 
   update() {
     if (this.selectedRowData) {
-      this.agModal.open(this.selectedRowData, !this.modify);
+      this.agModal.open(this.selectedRowData, this.modify);
     } 
   }
 
@@ -70,5 +68,29 @@ getSelectedRow() {
     if (this.selectedRowData) {
       this.agConfirm.open(this.selectedRowData);
     } 
+  }
+
+  dataAdd(data) {
+    this.rowData.push(data)
+    this.gridParams.api.setRowData(this.rowData)
+  }
+
+  dataUpdate(data) {
+    let rowNode = this.gridParams.api.getSelectedNodes(this.childIndex)
+    rowNode[0].setData(data)
+    console.log(this.rowData)
+  }
+
+  dataDel() {
+    this.gridParams.api.updateRowData({remove: [this.selectedRowData]})
+  }
+
+  test() {
+    let rowNode = this.gridParams.api.getSelectedNodes(3)
+    console.log(rowNode);
+    rowNode[0].setData(
+      {name: 'XX', age: 'yy', location: 'zz'}
+    )
+    console.log(rowNode);
   }
 }

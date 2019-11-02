@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, TemplateRef } from '@angular/core';
+import { Component, OnInit, ViewChild, TemplateRef, Output, EventEmitter, OnDestroy } from '@angular/core';
 import { ModalDirective } from 'ngx-bootstrap/modal/public_api';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 
@@ -9,9 +9,12 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 })
 export class AgModalComponent implements OnInit {
   @ViewChild('modal', {static: false}) modal: ModalDirective
+  @Output() dataAdd = new EventEmitter
+  @Output() dataUpdate = new EventEmitter
   myForm: FormGroup;
   modify: boolean;
   data
+  lockbtn: boolean = false
   
   constructor(
     private formBuilder: FormBuilder,
@@ -23,22 +26,36 @@ export class AgModalComponent implements OnInit {
 
   open(data, modify?) {
     this.myForm.disable()
-    this.data = data
+    
+    // add
     this.modal.show();
-    this.myForm.patchValue(data)
-    if (modify) {
-      this.modify = modify
-      this.myForm.controls.name.enable()
-      this.myForm.controls.age.enable()
-      this.myForm.controls.location.enable()
-    } 
-    if (modify === true) {
+    if (!data && !modify) {
+      this.modify = undefined
+      this.lockbtn = false
       this.myForm.reset()
-    } 
-    if (modify === false) {
       this.myForm.controls.name.enable()
       this.myForm.controls.age.enable()
       this.myForm.controls.location.enable()
+      console.log(this.modify);
+      
+    }
+
+    //view
+    if (data && !modify) {
+      this.modify = undefined
+      this.lockbtn = true
+      this.myForm.patchValue(data)
+    }
+
+    //update
+    if (data && modify) {
+      this.lockbtn = false
+      this.modify = modify
+      this.myForm.patchValue(data)
+      this.myForm.controls.name.enable()
+      this.myForm.controls.age.enable()
+      this.myForm.controls.location.enable()
+      console.log(this.modify)
     }
   }
 
@@ -52,5 +69,15 @@ export class AgModalComponent implements OnInit {
 
   closeModal() {
     this.modal.hide();
+  }
+
+  add() {
+    if (!this.modify) {
+      this.dataAdd.emit(this.myForm.value)
+      this.modal.hide();
+    } else {
+      this.dataUpdate.emit(this.myForm.value)
+      this.modal.hide();
+    }
   }
 }

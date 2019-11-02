@@ -14,5 +14,6 @@
         <button class="btn btn-success mr-2" (click)="del()">Xóa</button>
     </div>
 </div>
-<app-ag-modal #agModal></app-ag-modal>
-<app-ag-confirm #agConfirm></app-ag-confirm>
+<button class="btn btn-danger" (click)="test()" >test</button>  
+<app-ag-modal #agModal (dataAdd)="dataAdd($event)" (dataUpdate)="dataUpdate($event)"></app-ag-modal>
+<app-ag-confirm #agConfirm (cfm)="dataDel($event)"></app-ag-confirm>
